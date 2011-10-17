@@ -15,6 +15,19 @@ class Core
 		}
 	}
 
+	public function requestedPath()
+	{
+		if(isset($_SERVER['PATH_INFO']))
+		{
+			return $_SERVER['PATH_INFO'];
+		}
+
+		if(isset($_SERVER['REQUEST_URI']))
+		{
+			return str_replace('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+		}
+	}
+
 	public function dispatch($Controller = null)
 	{
 		// Replace any preceeding slashes from the request.
