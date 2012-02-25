@@ -2,98 +2,113 @@
 class Core
 {
 
-	protected static $_Config = array();
+	protected static $configuration = array();
 
-	public function __construct($Configuration)
+	public function __construct($configuration)
 	{
-		if(is_array($Configuration))
+		if (is_array($configuration))
 		{
-			foreach($Configuration as $Key => $Config)
+			foreach ($configuration as $key => $option)
 			{
-				$this->setConfig($Key, $Config);
+				$this->setConfig($key, $option);
 			}
 		}
 	}
 
 	public function requestedPath()
 	{
-		if(isset($_SERVER['PATH_INFO']))
+		if (isset($_SERVER['PATH_INFO']))
 		{
 			return $_SERVER['PATH_INFO'];
 		}
 
-		if(isset($_SERVER['REQUEST_URI']))
+		if (isset($_SERVER['REQUEST_URI']))
 		{
 			return str_replace('?' . $_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
 		}
+		return false;
 	}
 
-	public function dispatch($Controller = null)
+	public function dispatch($controller = null)
 	{
 		// Replace any proceeding slashes from the request.
-		$Controller = preg_replace('/^\//', '', $Controller);
+		$controller = preg_replace('/^\//', '', $controller);
 
-		if(empty($Controller))
+		if (empty($controller))
 		{
-			$Controller = $this->config('Application.Controller.Default');
+			$controller = $this->config('Application.Controller.Default');
 		}
+
+		// Include a class that extends the base controller if it exists.
+		preg_match('/^(.*)\//iU', $controller, $extender);
+		if (!empty($extender[1]))
+		{
+			$extender = str_replace('/', DS, $extender[1]) . DS . '_controller' . CONTROLLER_EXT;
+			if (file_exists(CONTROLLER_DIR . $extender))
+			{
+				include(CONTROLLER_DIR . $extender);
+			}
+		}
+
+		// Replace the controller path with the directory separator for sub-folders in the controllers.
+		$controller = str_replace('/', DS, $controller);
 
 		// Require our controller
-		if(!file_exists(CONTROLLER_DIR . $Controller . CONTROLLER_EXT))
+		if (!file_exists(CONTROLLER_DIR . $controller . CONTROLLER_EXT))
 		{
-			$Controller = '_error404';
+			$controller = '_error404';
 		}
-		include(CONTROLLER_DIR . $Controller . CONTROLLER_EXT);
+		include(CONTROLLER_DIR . $controller . CONTROLLER_EXT);
 
 		// Execute the controller index
-		$SetupControllerName = $Controller . 'Controller';
+		$SetupControllerName = $controller . 'Controller';
 		$SetupController = new $SetupControllerName;
-		$SetupController->view = $Controller;
+		$SetupController->view = $controller;
 
-		if(!$SetupController->index())
+		if ($SetupController->index())
 		{
-			return false;
+			return true;
 		}
+		return false;
 	}
 
-	public static function config($Name = FALSE)
+	public static function config($configName = false)
 	{
-		if($Name === FALSE)
+		if ($configName === false)
 		{
-			$Result = self::getAllConfig();
+			return self::getAllConfig();
 		}
 		else
 		{
-			$Result = self::getConfig($Name);
+			return self::getConfiguration($configName);
 		}
-
-		return $Result;
 	}
 
 	private static function getAllConfig()
 	{
-		return self::$_Config;
+		return self::$configuration;
 	}
 
-	private static function getConfig($Name)
+	private static function getConfiguration($name)
 	{
-		if(array_key_exists($Name, self::$_Config))
+		if (array_key_exists($name, self::$configuration))
 		{
-			return self::$_Config[$Name];
+			return self::$configuration[$name];
 		}
+		return false;
 	}
 
-	private function setConfig($Key, $FieldName)
+	private function setConfig($key, $option)
 	{
 
-		if(is_array($FieldName) === FALSE)
+		if (is_array($option) === false)
 		{
-			$FieldName = array($FieldName);
+			$option = array($option);
 		}
 
-		foreach($FieldName as $Name => $Field)
+		foreach ($option as $name => $field)
 		{
-			self::$_Config[$Key . '.' . $Name] = $Field;
+			self::$configuration[$key . '.' . $name] = $field;
 		}
 	}
 }

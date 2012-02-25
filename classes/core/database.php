@@ -2,51 +2,31 @@
 
 class Database
 {
+	private static $server = null;
+	private static $databaseName = null;
+	private static $username = null;
+	private static $password = null;
+	private static $driver = null;
 
-	private static $instance = null;
-	private static $connection = null;
-	private static $isSetup = false;
-	private static $Server = null;
-	private static $DatabaseName = null;
-	private static $Username = null;
-	private static $Password = null;
-
-	public static function setupConnection($Server, $Database, $Username, $Password)
+	public function __construct()
 	{
-		Database::$isSetup = true;
-		Database::$Server = $Server;
-		Database::$DatabaseName = $Database;
-		Database::$Username = $Username;
-		Database::$Password = $Password;
-	}
-
-	public static function singleton()
-	{
-		if(self::$instance == null)
-		{
-			$className = __CLASS__;
-			self::$instance = new $className;
-		}
-		return self::$instance->connection();
+		Database::$server = Core::config('Database.Host');
+		Database::$databaseName = Core::config('Database.Database');
+		Database::$username = Core::config('Database.Username');
+		Database::$password = Core::config('Database.Password');
+		Database::$driver = Core::config('Database.Driver');
 	}
 
 	public function connection()
 	{
-		if(self::$connection == null)
+		try
 		{
-			$DatbaseOptions = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
-			self::$connection = new PDO('mysql:host=' . Database::$Server . ';dbname=' . Database::$DatabaseName, Database::$Username, Database::$Password, $DatbaseOptions);
+			$databaseOptions = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+			return new PDO('mysql:host=' . Database::$server . ';dbname=' . Database::$databaseName, Database::$username, Database::$password, $databaseOptions);
+		} catch (PDOException $exception)
+		{
+			trigger_error('Database connection failed with message: "' . $exception->getMessage() . '"', E_USER_ERROR);
 		}
-		return self::$connection;
-	}
-
-	public function __clone()
-	{
-		trigger_error('Clone is not allowed.', E_USER_ERROR);
-	}
-
-	public function __wakeup()
-	{
-		trigger_error('Unserializing is not allowed.', E_USER_ERROR);
+		return false;
 	}
 }

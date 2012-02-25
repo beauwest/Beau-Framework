@@ -3,39 +3,48 @@
 class User
 {
 
-	public static $id = 0;
+	public $storage;
+	private $database;
 
-	public static function isLoggedIn()
+	public function __construct(PDO &$database)
 	{
-		if(!empty($_SESSION['user_id']))
+		$this->database = &$database;
+		if (empty($_SESSION['user']))
 		{
-			self::$id = $_SESSION['user_id'];
+			$_SESSION['user'] = new stdClass();
+		}
+		$this->storage = &$_SESSION['user'];
+	}
+
+	public function isLoggedIn()
+	{
+		if (!empty($this->storage->id))
+		{
 			return true;
 		}
 		return false;
 	}
 
-	public static function requireLogin()
+	public function requireLogin()
 	{
-		if(self::isLoggedIn())
+		if ($this->isLoggedIn())
 		{
 			return true;
 		}
-		header('Location: /login');
-		exit;
+		return false;
 	}
 
-	public static function logIn($code)
+	public function logIn($email, $password)
 	{
-		$Database = Database::singleton();
-		$Statement = $Database->prepare("SELECT id FROM user WHERE code = :code");
-		$Statement->bindParam(':code', $code, PDO::PARAM_STR);
-		$Statement->execute();
-		$Result = $Statement->fetchColumn();
+		$query = $this->database->prepare("SELECT * FROM user WHERE email = :email AND password = :password");
+		$query->bindValue(':email', $email, PDO::PARAM_STR);
+		$query->bindValue(':password', sha1($password), PDO::PARAM_STR);
+		$query->execute();
+		$record = $query->fetch();
 
-		if(!empty($Result))
+		if (!empty($record))
 		{
-			$_SESSION['user_id'] = $Result;
+			$this->storage->id = $record->id;
 			return true;
 		}
 		return false;
