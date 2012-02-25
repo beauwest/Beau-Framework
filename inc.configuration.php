@@ -12,10 +12,10 @@ define('STYLESHEET_DIR', '/styles/');
 define('JAVASCRIPT_DIR', '/javascripts/');
 
 // Require all of our necessary libraries.
-require_once(PATH_ROOT . DS . 'classes' . DS . 'core.php');
-require_once(PATH_ROOT . DS . 'classes' . DS . 'controller.php');
-require_once(PATH_ROOT . DS . 'classes' . DS . 'user.php');
-require_once(PATH_ROOT . DS . 'classes' . DS . 'database.php');
+require_once(PATH_ROOT . DS . 'classes' . DS . 'core' . DS . 'core.php');
+require_once(PATH_ROOT . DS . 'classes' . DS . 'core' . DS . 'controller.php');
+require_once(PATH_ROOT . DS . 'classes' . DS . 'core' . DS . 'user.php');
+require_once(PATH_ROOT . DS . 'classes' . DS . 'core' . DS . 'database.php');
 
 // Start our session
 if(!isset($_SESSION))

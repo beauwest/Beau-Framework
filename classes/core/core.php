@@ -30,7 +30,7 @@ class Core
 
 	public function dispatch($Controller = null)
 	{
-		// Replace any preceeding slashes from the request.
+		// Replace any proceeding slashes from the request.
 		$Controller = preg_replace('/^\//', '', $Controller);
 
 		if(empty($Controller))
