@@ -61,6 +61,8 @@ class Core
 		include(CONTROLLER_DIR . $controller . CONTROLLER_EXT);
 
 		// Execute the controller index
+		$setupControllerName = preg_replace('/\/([a-z])/ie', "strtoupper('$1')", $controller);
+		$setupControllerName = str_replace(array('\\', '/'), '', $setupControllerName);
 		$SetupControllerName = $controller . 'Controller';
 		$SetupController = new $SetupControllerName;
 		$SetupController->view = $controller;
