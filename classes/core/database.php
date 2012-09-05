@@ -23,7 +23,7 @@ class Database
 		{
 			$databaseOptions = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 			return new PDO('mysql:host=' . Database::$server . ';dbname=' . Database::$databaseName, Database::$username, Database::$password, $databaseOptions);
-		} catch (PDOException $exception)
+		} catch(PDOException $exception)
 		{
 			trigger_error('Database connection failed with message: "' . $exception->getMessage() . '"', E_USER_ERROR);
 		}

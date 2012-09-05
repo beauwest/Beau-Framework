@@ -18,7 +18,7 @@ require_once(PATH_ROOT . DS . 'classes' . DS . 'core' . DS . 'user.php');
 require_once(PATH_ROOT . DS . 'classes' . DS . 'core' . DS . 'database.php');
 
 // Start our session
-if (!isset($_SESSION))
+if(!isset($_SESSION))
 {
 	session_start();
 }

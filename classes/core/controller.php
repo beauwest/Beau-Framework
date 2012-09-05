@@ -24,14 +24,14 @@ class Controller
 
 	public function render()
 	{
-		if ($this->header)
+		if($this->header)
 		{
 			include(VIEW_DIR . '_header' . VIEW_EXT);
 		}
 
 		include(VIEW_DIR . $this->view . VIEW_EXT);
 
-		if ($this->footer)
+		if($this->footer)
 		{
 			include(VIEW_DIR . '_footer' . VIEW_EXT);
 		}
@@ -39,7 +39,7 @@ class Controller
 
 	public function renderStylesheets()
 	{
-		foreach (CORE::config('Application.Stylesheets') as $sheet)
+		foreach(CORE::config('Application.Stylesheets') as $sheet)
 		{
 			echo '<link rel="stylesheet" href="' . STYLESHEET_DIR . $sheet . '.css" type="text/css" media="screen" title="Screen">';
 		}

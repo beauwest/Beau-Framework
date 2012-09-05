@@ -9,7 +9,7 @@ class User
 	public function __construct(PDO &$database)
 	{
 		$this->database = &$database;
-		if (empty($_SESSION['user']))
+		if(empty($_SESSION['user']))
 		{
 			$_SESSION['user'] = new stdClass();
 		}
@@ -18,7 +18,7 @@ class User
 
 	public function isLoggedIn()
 	{
-		if (!empty($this->storage->id))
+		if(!empty($this->storage->id))
 		{
 			return true;
 		}
@@ -27,7 +27,7 @@ class User
 
 	public function requireLogin()
 	{
-		if ($this->isLoggedIn())
+		if($this->isLoggedIn())
 		{
 			return true;
 		}
@@ -42,7 +42,7 @@ class User
 		$query->execute();
 		$record = $query->fetch();
 
-		if (!empty($record))
+		if(!empty($record))
 		{
 			$this->storage->id = $record->id;
 			return true;
