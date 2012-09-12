@@ -45,14 +45,6 @@ class Controller
 			include(VIEW_DIR . '_footer' . VIEW_EXT);
 		}
 	}
-
-	public function renderStylesheets()
-	{
-		foreach(CORE::config('Application.Stylesheets') as $sheet)
-		{
-			echo '<link rel="stylesheet" href="' . STYLESHEET_DIR . $sheet . '.css" type="text/css" media="screen" title="Screen">';
-		}
-	}
 	
 	public static function exception_handler(Exception $exception)
 	{

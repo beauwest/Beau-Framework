@@ -8,8 +8,6 @@ define('CONTROLLER_DIR', PATH_ROOT . DS . 'controllers' . DS);
 define('CONTROLLER_EXT', '.php');
 define('VIEW_DIR', PATH_ROOT . DS . 'views' . DS);
 define('VIEW_EXT', '.html');
-define('STYLESHEET_DIR', '/styles/');
-define('JAVASCRIPT_DIR', '/javascripts/');
 
 // Require all of our necessary libraries.
 require_once(PATH_ROOT . DS . 'classes' . DS . 'core' . DS . 'core.php');
@@ -27,8 +25,6 @@ if(!isset($_SESSION))
 $Configuration['Application']['Title'] = 'My Awesome Application!';
 $Configuration['Application']['Locale'] = 'en-US';
 $Configuration['Application']['Controller.Default'] = 'index';
-$Configuration['Application']['Stylesheets'] = array('application');
-$Configuration['Application']['Javascripts'] = array();
 $Configuration['Application']['Date.Format'] = 'm/d/Y';
 $Configuration['Application']['DateTime.Format'] = 'm/d/Y h:i a';
 
