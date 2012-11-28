@@ -33,6 +33,7 @@ class Controller
 
 	public function render()
 	{
+		header('Content-type: text/html; charset=utf-8');
 		if($this->header)
 		{
 			include(VIEW_DIR . '_header' . VIEW_EXT);
